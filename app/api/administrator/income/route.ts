@@ -30,8 +30,7 @@ export async function GET() {
             LEFT JOIN historias h ON h.paciente_id = pte.id
             LEFT JOIN consultas_agrupadas ca ON ca.historia_id = h.id
             LEFT JOIN consultas c ON c.historia_id = h.id
-            LEFT JOIN consultas_pagos cp ON cp.consulta_id = c.id
-            LEFT JOIN pagos pg ON pg.id = cp.pago_id
+            LEFT JOIN pagos pg ON pg.consulta_id = c.id
             GROUP BY 
                 h.codigo,
                 pte.cedula,

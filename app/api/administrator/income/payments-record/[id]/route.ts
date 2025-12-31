@@ -21,9 +21,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{i
                 c.monto_total,
                 (
                     SELECT array_agg(json_build_object('monto', p.monto, 'metodo', p.metodo, 'referencia', p.referencia, 'fecha', p.fecha))
-                    FROM consultas_pagos cp
-                    JOIN pagos p ON cp.pago_id = p.id
-                    WHERE cp.consulta_id = c.id
+                    FROM pagos p
+                    WHERE p.consulta_id = c.id
                 ) AS pagos
             FROM historias h
             INNER JOIN consultas c ON c.historia_id = h.id

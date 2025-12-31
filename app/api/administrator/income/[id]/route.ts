@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{i
         const query = `
             SELECT
                 p.id,
-                cp.consulta_id,
+                p.consulta_id,
                 CONCAT(pac.nombre, ' ', pac.apellido) AS paciente,
                 c.codigo,
                 p.monto,
@@ -25,8 +25,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{i
             FROM historias h
             LEFT JOIN pacientes pac ON pac.id = h.paciente_id
             LEFT JOIN consultas c ON c.historia_id = h.id
-            LEFT JOIN consultas_pagos cp ON cp.consulta_id = c.id
-            JOIN pagos p ON cp.pago_id = p.id
+            JOIN pagos p ON p.consulta_id = c.id
             WHERE h.codigo = $1;
         `;
 
@@ -52,11 +51,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     try {
         await client.connect();
 
-        const consultationQuery = `DELETE FROM consultas_pagos WHERE pago_id = $1;`;
-
         const paymentQuery = `DELETE FROM pagos WHERE id = $1;`;
-
-        await client.query(consultationQuery, [id]);
 
         const result = await client.query(paymentQuery, [id]);
 

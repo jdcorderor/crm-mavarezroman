@@ -27,8 +27,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{u
                 COALESCE(SUM(p.monto), 0) AS ingresos_totales_mes
             FROM odontologos o
             JOIN consultas c ON c.odontologo_id = o.id
-            INNER JOIN consultas_pagos cp ON cp.consulta_id = c.id
-            INNER JOIN pagos p ON p.id = cp.pago_id
+            INNER JOIN pagos p ON p.consulta_id = c.id
             WHERE p.fecha >= CURRENT_DATE - INTERVAL '30 days' AND o.id = $1
         `;
 
@@ -45,8 +44,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{u
 
                 (SELECT SUM(p.monto)
                 FROM pagos p
-                JOIN consultas_pagos cp ON cp.pago_id = p.id
-                JOIN consultas c ON c.id = cp.consulta_id
+                JOIN consultas c ON c.id = p.consulta_id
                 WHERE c.odontologo_id = $1) AS total_pagado;
         `;
 

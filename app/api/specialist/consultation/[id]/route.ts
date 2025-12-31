@@ -70,21 +70,18 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         // -------------------------------------------------------------------------------------------
 
         if (payment.paidAmount && payment.paidAmount > 0) {
-            const paymentResult = await client.query(`
+            await client.query(`
                 INSERT INTO pagos (
                     paciente_id,
+                    consulta_id,
                     monto,
                     fecha,
                     metodo,
                     referencia
-                ) VALUES ($1, $2, $3, $4, $5)
+                ) VALUES ($1, $2, $3, $4, $5, $6)
                 RETURNING id`,
-                [patientID, payment.paidAmount, timestamp, payment.method, payment.reference]
+                [patientID, consultationID, payment.paidAmount, timestamp, payment.method, payment.reference]
             );
-
-            const paymentID = paymentResult.rows[0].id;
-
-            await client.query("INSERT INTO consultas_pagos (consulta_id, pago_id) VALUES ($1, $2)", [consultationID, paymentID]);
         }
 
         // -------------------------------------------------------------------------------------------

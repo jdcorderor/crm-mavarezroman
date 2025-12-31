@@ -43,8 +43,7 @@ export async function GET(): Promise<NextResponse> {
                     c.historia_id,
                     SUM(p.monto) AS total_pagos
                 FROM consultas c
-                JOIN consultas_pagos cp ON cp.consulta_id = c.id
-                JOIN pagos p ON p.id = cp.pago_id
+                JOIN pagos p ON p.consulta_id = c.id
                 GROUP BY c.historia_id
             ),
 

@@ -26,8 +26,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{i
             FROM historias h
             INNER JOIN consultas c ON c.historia_id = h.id
             LEFT JOIN odontologos o ON c.odontologo_id = o.id
-            LEFT JOIN consultas_pagos cp ON cp.consulta_id = c.id
-            LEFT JOIN pagos p ON p.id = cp.pago_id
+            LEFT JOIN pagos p ON p.consulta_id = c.id
             WHERE h.codigo = $1
             GROUP BY
                 c.id,
